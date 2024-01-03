@@ -41,9 +41,67 @@
  */
   const express = require('express');
   const bodyParser = require('body-parser');
-  
+  const port = 3000
   const app = express();
+
+  let todolist = [];
+
+  class todos {
+    constructor(Id, title, description, completed) {
+        this.Id = Id;
+        this.title = title;
+        this.description = description;
+        this.completed = completed;
+    }
+  }
+
+  function todoGet(Id){
+    let requestedItem = todolist[Id];
+    console.log(todolist);
+    return requestedItem;
+  }
+
+  app.get("/", function(req, res){
+    const Id = req.query.Id;
+    const ans = todoGet(Id);
+    res.send(ans);
+    // res.send("Hello World");
+  })
+
   
+  function todoPost(title, description, completed){
+    let Id =Math.floor(Math.random() * 90) + 10;
+    let newItem = new todos(Id, title, description, completed);
+    todolist.push(newItem);
+    return Id;
+  }
+
+  app.post("/", function(req, res){
+    const title = req.query.title;
+    const description = req.query.description;
+    const completed = req.query.completed;
+    const ans =todoPost(title, description, completed);
+    res.send(ans.toString());
+  })
+
+
+  app.put("/", function(req, res){
+
+  })
+
+
+  app.delete("/", function(req, res){
+
+  })
+
+
   app.use(bodyParser.json());
-  
+
+
+  app.listen(port, () => {
+    console.log(`ToDo app listening on port ${port}`)
+  })
+
   module.exports = app;
+
+
